@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using URLShortner.Data.Models;
 
@@ -14,6 +14,6 @@ namespace URLShortner.Data.Interfaces
 
         Task<Url> GetById(int id);
 
-        Task<IEnumerable<Url>> GetAll();
+        Task<IQueryable<Url>> GetAll();
     }
 }
