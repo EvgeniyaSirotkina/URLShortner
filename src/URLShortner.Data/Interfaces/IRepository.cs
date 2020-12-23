@@ -14,6 +14,6 @@ namespace URLShortner.Data.Interfaces
 
         Task<Url> GetById(int id);
 
-        Task<IQueryable<Url>> GetAll();
+        IQueryable<Url> GetAll();
     }
 }
