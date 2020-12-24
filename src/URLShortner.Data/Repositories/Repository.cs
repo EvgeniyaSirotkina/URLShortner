@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using URLShortner.Data.EF;
+using URLShortner.Data.Helpers;
 using URLShortner.Data.Interfaces;
 using URLShortner.Data.Models;
 
@@ -44,7 +45,7 @@ namespace URLShortner.Data.Repositories
                 return new Response
                 {
                     IsSuccessful = false,
-                    Message = ex.Message,
+                    Message = ex.DbUpdateConcurrencyExceptionMessageBuilder(),
                 };
             }
             catch (DbUpdateException ex)
@@ -52,7 +53,7 @@ namespace URLShortner.Data.Repositories
                 return new Response
                 {
                     IsSuccessful = false,
-                    Message = ex.Message,
+                    Message = ex.DbUpdateExceptionMessageBuilder(),
                 };
             }
             catch (Exception ex)
@@ -72,7 +73,7 @@ namespace URLShortner.Data.Repositories
                 return new Response
                 {
                     IsSuccessful = false,
-                    Message = "Id must be positive number.",
+                    Message = "Id must be a positive number.",
                 };
             }
 
@@ -85,7 +86,7 @@ namespace URLShortner.Data.Repositories
                     return new Response
                     {
                         IsSuccessful = false,
-                        Message = $"Can't find Url with {id} id.",
+                        Message = $"Can't find Url object with {id} id.",
                     };
                 }
 
@@ -103,7 +104,7 @@ namespace URLShortner.Data.Repositories
                 return new Response
                 {
                     IsSuccessful = false,
-                    Message = ex.Message,
+                    Message = ex.DbUpdateConcurrencyExceptionMessageBuilder(),
                 };
             }
             catch (DbUpdateException ex)
@@ -111,7 +112,7 @@ namespace URLShortner.Data.Repositories
                 return new Response
                 {
                     IsSuccessful = false,
-                    Message = ex.Message,
+                    Message = ex.DbUpdateExceptionMessageBuilder(),
                 };
             }
             catch (Exception ex)
@@ -152,14 +153,14 @@ namespace URLShortner.Data.Repositories
 
             try
             {
-                var oldUrl = await _db.Urls.FirstOrDefaultAsync(url => url.UrlId == url.UrlId);
+                var oldUrl = await _db.Urls.FirstOrDefaultAsync(u => u.UrlId == url.UrlId);
 
                 if (oldUrl == null)
                 {
                     return new Response
                     {
                         IsSuccessful = false,
-                        Message = $"Can't find Url with {url.UrlId} id.",
+                        Message = $"Can't find Url object with {url.UrlId} id.",
                     };
                 }
 
@@ -177,7 +178,7 @@ namespace URLShortner.Data.Repositories
                 return new Response
                 {
                     IsSuccessful = false,
-                    Message = ex.Message,
+                    Message = ex.DbUpdateConcurrencyExceptionMessageBuilder(),
                 };
             }
             catch (DbUpdateException ex)
@@ -185,7 +186,7 @@ namespace URLShortner.Data.Repositories
                 return new Response
                 {
                     IsSuccessful = false,
-                    Message = ex.Message,
+                    Message = ex.DbUpdateExceptionMessageBuilder(),
                 };
             }
             catch (Exception ex)
