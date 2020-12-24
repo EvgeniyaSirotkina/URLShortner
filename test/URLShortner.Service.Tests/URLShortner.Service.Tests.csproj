@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\URLShortner.Service\URLShortner.Service.csproj" />
+    <ProjectReference Include="..\..\src\URLShortner.Service\URLShortner.Service.csproj" />
   </ItemGroup>
 
 </Project>
