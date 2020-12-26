@@ -79,7 +79,7 @@ namespace URLShortner.Data.Repositories
 
             try
             {
-                var url = await _db.Urls.FirstOrDefaultAsync(url => url.UrlId == id);
+                var url = await _db.Urls.FirstOrDefaultAsync(u => u.UrlId == id);
 
                 if (url == null)
                 {
