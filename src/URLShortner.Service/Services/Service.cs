@@ -27,8 +27,8 @@ namespace URLShortner.Service.Services
         /// Create new Url item.
         /// </summary>
         /// <param name="url">UrlDto model.</param>
-        /// <returns>Empty string or error message.</returns>
-        public Task<string> Create(UrlDto url)
+        /// <returns>True or False.</returns>
+        public Task<bool> Create(UrlDto url)
         {
             throw new NotImplementedException();
         }
@@ -37,8 +37,8 @@ namespace URLShortner.Service.Services
         /// Delete existing URL by Id.
         /// </summary>
         /// <param name="id">Url Id.</param>
-        /// <returns>Empty string or error message.</returns>
-        public Task<string> Delete(int id)
+        /// <returns>True or False.</returns>
+        public Task<bool> Delete(int id)
         {
             throw new NotImplementedException();
         }
@@ -66,8 +66,8 @@ namespace URLShortner.Service.Services
         /// Update existing URL.
         /// </summary>
         /// <param name="url">Updated Url.</param>
-        /// <returns>Empty string or error message.</returns>
-        public Task<string> Update(UrlDto url)
+        /// <returns>True or False.</returns>
+        public Task<bool> Update(UrlDto url)
         {
             throw new NotImplementedException();
         }

@@ -13,22 +13,22 @@ namespace URLShortner.Service.Interfaces
         /// Create new Url item.
         /// </summary>
         /// <param name="url">UrlDto model.</param>
-        /// <returns>Empty string or error message.</returns>
-        Task<string> Create(UrlDto url);
+        /// <returns>True or False.</returns>
+        Task<bool> Create(UrlDto url);
 
         /// <summary>
         /// Delete existing URL by Id.
         /// </summary>
         /// <param name="id">Url Id.</param>
-        /// <returns>Empty string or error message.</returns>
-        Task<string> Delete(int id);
+        /// <returns>True or False.</returns>
+        Task<bool> Delete(int id);
 
         /// <summary>
         /// Update existing URL.
         /// </summary>
         /// <param name="url">Updated Url.</param>
-        /// <returns>Empty string or error message.</returns>
-        Task<string> Update(UrlDto url);
+        /// <returns>True or False.</returns>
+        Task<bool> Update(UrlDto url);
 
         /// <summary>
         /// Get Url by Id.
