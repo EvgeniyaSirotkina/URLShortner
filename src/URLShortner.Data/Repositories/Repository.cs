@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using URLShortner.Data.EF;
 using URLShortner.Data.Helpers;
 using URLShortner.Data.Interfaces;
@@ -12,21 +13,20 @@ namespace URLShortner.Data.Repositories
     public class Repository : IRepository
     {
         private readonly UrlContext _db;
+        private readonly ILogger _logger;
 
-        public Repository(UrlContext db)
+        public Repository(UrlContext db, ILogger logger)
         {
             _db = db;
+            _logger = logger;
         }
 
-        public async Task<Response> Create(Url url)
+        public async Task<bool> Create(Url url)
         {
             if (url == null)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = "Argument is null. Can't create new record.",
-                };
+                _logger.LogError("Argument is null. Can't create new record.");
+                return false;
             }
 
             try
@@ -34,47 +34,32 @@ namespace URLShortner.Data.Repositories
                 _db.Entry(url).State = EntityState.Added;
                 await _db.SaveChangesAsync();
 
-                return new Response
-                {
-                    IsSuccessful = true,
-                    Message = string.Empty,
-                };
+                _logger.LogInformation($"New Url was created with {url.UrlId} id.");
+                return true;
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = ex.DbUpdateConcurrencyExceptionMessageBuilder(),
-                };
+                _logger.LogError(ex.DbUpdateConcurrencyExceptionMessageBuilder());
+                return false;
             }
             catch (DbUpdateException ex)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = ex.DbUpdateExceptionMessageBuilder(),
-                };
+                _logger.LogError(ex.DbUpdateExceptionMessageBuilder());
+                return false;
             }
             catch (Exception ex)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = ex.Message,
-                };
+                _logger.LogError(ex.Message);
+                return false;
             }
         }
 
-        public async Task<Response> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             if (id <= 0)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = "Id must be a positive number.",
-                };
+                _logger.LogError("Id must be a positive number.");
+                return false;
             }
 
             try
@@ -83,45 +68,30 @@ namespace URLShortner.Data.Repositories
 
                 if (url == null)
                 {
-                    return new Response
-                    {
-                        IsSuccessful = false,
-                        Message = $"Can't find Url object with {id} id.",
-                    };
+                    _logger.LogError($"Can't find Url object with {id} id.");
+                    return false;
                 }
 
                 _db.Entry(url).State = EntityState.Deleted;
                 await _db.SaveChangesAsync();
 
-                return new Response
-                {
-                    IsSuccessful = true,
-                    Message = string.Empty,
-                };
+                _logger.LogInformation($"The Url with {id} id was successfully deleted.");
+                return true;
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = ex.DbUpdateConcurrencyExceptionMessageBuilder(),
-                };
+                _logger.LogError(ex.DbUpdateConcurrencyExceptionMessageBuilder());
+                return false;
             }
             catch (DbUpdateException ex)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = ex.DbUpdateExceptionMessageBuilder(),
-                };
+                _logger.LogError(ex.DbUpdateExceptionMessageBuilder());
+                return false;
             }
             catch (Exception ex)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = ex.Message,
-                };
+                _logger.LogError(ex.Message);
+                return false;
             }
         }
 
@@ -140,15 +110,12 @@ namespace URLShortner.Data.Repositories
             return null;
         }
 
-        public async Task<Response> Update(Url url)
+        public async Task<bool> Update(Url url)
         {
             if (url == null)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = "Argument is null. Can't create new record.",
-                };
+                _logger.LogError("Argument is null. Can't create new record.");
+                return false;
             }
 
             try
@@ -157,45 +124,30 @@ namespace URLShortner.Data.Repositories
 
                 if (oldUrl == null)
                 {
-                    return new Response
-                    {
-                        IsSuccessful = false,
-                        Message = $"Can't find Url object with {url.UrlId} id.",
-                    };
+                    _logger.LogError($"Can't find Url object with {url.UrlId} id.");
+                    return false;
                 }
 
                 _db.Entry(url).State = EntityState.Modified;
                 await _db.SaveChangesAsync();
 
-                return new Response
-                {
-                    IsSuccessful = true,
-                    Message = string.Empty,
-                };
+                _logger.LogError($"The Url with {url.UrlId} id was successfully updated.");
+                return true;
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = ex.DbUpdateConcurrencyExceptionMessageBuilder(),
-                };
+                _logger.LogError(ex.DbUpdateConcurrencyExceptionMessageBuilder());
+                return false;
             }
             catch (DbUpdateException ex)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = ex.DbUpdateExceptionMessageBuilder(),
-                };
+                _logger.LogError(ex.DbUpdateExceptionMessageBuilder());
+                return false;
             }
             catch (Exception ex)
             {
-                return new Response
-                {
-                    IsSuccessful = false,
-                    Message = ex.Message,
-                };
+                _logger.LogError(ex.Message);
+                return false;
             }
         }
     }

@@ -6,11 +6,11 @@ namespace URLShortner.Data.Interfaces
 {
     public interface IRepository
     {
-        Task<Response> Create(Url url);
+        Task<bool> Create(Url url);
 
-        Task<Response> Delete(int id);
+        Task<bool> Delete(int id);
 
-        Task<Response> Update(Url url);
+        Task<bool> Update(Url url);
 
         Task<Url> GetById(int id);
 

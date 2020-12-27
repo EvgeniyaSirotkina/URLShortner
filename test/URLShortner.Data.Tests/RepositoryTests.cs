@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 using URLShortner.Data.EF;
 using URLShortner.Data.Models;
@@ -24,7 +26,7 @@ namespace URLShortner.Data.Tests
         }
 
         [Fact]
-        public async Task Create_WhenDataIsValid_ShouldReturnSuccessfulResponse()
+        public async Task Create_WhenDataIsValid_ShouldReturnTrue()
         {
             // Arrange
             var url = _fixture.Create<Url>();
@@ -37,13 +39,11 @@ namespace URLShortner.Data.Tests
             var urls = repository.GetAll();
             urls.Should().HaveCount(4);
 
-            response.Should().NotBeNull();
-            response.IsSuccessful.Should().BeTrue();
-            response.Message.Should().BeEmpty();
+            response.Should().BeTrue();
         }
 
         [Fact]
-        public async Task Create_WhenDataIsNull_ShouldReturnFailResponse()
+        public async Task Create_WhenDataIsNull_ShouldReturnFalse()
         {
             // Arrange
             var repository = GetRepository();
@@ -52,13 +52,11 @@ namespace URLShortner.Data.Tests
             var response = await repository.Create(null);
 
             // Assert
-            response.Should().NotBeNull();
-            response.IsSuccessful.Should().BeFalse();
-            response.Message.Should().Be("Argument is null. Can't create new record.");
+            response.Should().BeFalse();
         }
 
         [Fact]
-        public async Task Delete_WhenDataExist_ShouldDeleteObjectAndReturnSuccessfulResponse()
+        public async Task Delete_WhenDataExist_ShouldDeleteObjectAndReturnTrue()
         {
             // Arrange
             var url = _fixture.Create<Url>();
@@ -72,13 +70,11 @@ namespace URLShortner.Data.Tests
             var urls = repository.GetAll();
             urls.Should().HaveCount(3);
 
-            response.Should().NotBeNull();
-            response.IsSuccessful.Should().BeTrue();
-            response.Message.Should().BeEmpty();
+            response.Should().BeTrue();
         }
 
         [Fact]
-        public async Task Delete_WhenIdIsNegative_ShouldReturnFailResponse()
+        public async Task Delete_WhenIdIsNegative_ShouldReturnFalse()
         {
             // Arrange
             var id = -3;
@@ -88,13 +84,11 @@ namespace URLShortner.Data.Tests
             var response = await repository.Delete(id);
 
             // Assert
-            response.Should().NotBeNull();
-            response.IsSuccessful.Should().BeFalse();
-            response.Message.Should().Be("Id must be a positive number.");
+            response.Should().BeFalse();
         }
 
         [Fact]
-        public async Task Delete_WhenDataDoesntExist_ShouldReturnFailResponse()
+        public async Task Delete_WhenDataDoesntExist_ShouldReturnFalse()
         {
             // Arrange
             var id = 4;
@@ -104,9 +98,7 @@ namespace URLShortner.Data.Tests
             var response = await repository.Delete(id);
 
             // Assert
-            response.Should().NotBeNull();
-            response.IsSuccessful.Should().BeFalse();
-            response.Message.Should().Be($"Can't find Url object with {id} id.");
+            response.Should().BeFalse();
         }
 
         [Fact]
@@ -124,7 +116,7 @@ namespace URLShortner.Data.Tests
         }
 
         [Fact]
-        public async Task Update_WhenDataExist_ShouldReturnSuccessfulResponse()
+        public async Task Update_WhenDataExist_ShouldReturnTrue()
         {
             // Arrange
             var url = _fixture.Create<Url>();
@@ -136,13 +128,11 @@ namespace URLShortner.Data.Tests
             var response = await repository.Update(url);
 
             // Assert
-            response.Should().NotBeNull();
-            response.IsSuccessful.Should().BeTrue();
-            response.Message.Should().BeEmpty();
+            response.Should().BeTrue();
         }
 
         [Fact]
-        public async Task Update_WhenDataIsNull_ShouldReturnFailResponse()
+        public async Task Update_WhenDataIsNull_ShouldReturnFalse()
         {
             // Arrange
             var repository = GetRepository();
@@ -151,13 +141,11 @@ namespace URLShortner.Data.Tests
             var response = await repository.Update(null);
 
             // Assert
-            response.Should().NotBeNull();
-            response.IsSuccessful.Should().BeFalse();
-            response.Message.Should().Be("Argument is null. Can't create new record.");
+            response.Should().BeFalse();
         }
 
         [Fact]
-        public async Task Update_WhenDataDoesntExist_ShouldReturnFailResponse()
+        public async Task Update_WhenDataDoesntExist_ShouldReturnFalse()
         {
             // Arrange
             var url = _fixture.Create<Url>();
@@ -167,9 +155,7 @@ namespace URLShortner.Data.Tests
             var response = await repository.Update(url);
 
             // Assert
-            response.Should().NotBeNull();
-            response.IsSuccessful.Should().BeFalse();
-            response.Message.Should().Be($"Can't find Url object with {url.UrlId} id.");
+            response.Should().BeFalse();
         }
 
         [Fact]
@@ -222,7 +208,7 @@ namespace URLShortner.Data.Tests
 
             SeedTestData();
 
-            return new Repository(_context);
+            return new Repository(_context, Mock.Of<ILogger>());
         }
 
         private DbContextOptions<UrlContext> GetOptions()
