@@ -208,7 +208,7 @@ namespace URLShortner.Data.Tests
 
             SeedTestData();
 
-            return new Repository(_context, Mock.Of<ILogger>());
+            return new Repository(_context, Mock.Of<ILogger<Repository>>());
         }
 
         private DbContextOptions<UrlContext> GetOptions()

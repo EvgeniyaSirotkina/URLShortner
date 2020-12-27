@@ -13,9 +13,9 @@ namespace URLShortner.Data.Repositories
     public class Repository : IRepository
     {
         private readonly UrlContext _db;
-        private readonly ILogger _logger;
+        private readonly ILogger<Repository> _logger;
 
-        public Repository(UrlContext db, ILogger logger)
+        public Repository(UrlContext db, ILogger<Repository> logger)
         {
             _db = db;
             _logger = logger;
