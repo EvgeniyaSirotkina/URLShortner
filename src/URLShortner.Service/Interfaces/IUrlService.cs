@@ -5,16 +5,16 @@ using URLShortner.Service.Models;
 namespace URLShortner.Service.Interfaces
 {
     /// <summary>
-    /// Definition interface IService.
+    /// Definition interface IUrlService.
     /// </summary>
-    public interface IService
+    public interface IUrlService
     {
         /// <summary>
         /// Create new Url item.
         /// </summary>
-        /// <param name="url">UrlDto model.</param>
+        /// <param name="newUrl">New Url.</param>
         /// <returns>True or False.</returns>
-        Task<bool> Create(UrlDto url);
+        Task<bool> Create(string newUrl);
 
         /// <summary>
         /// Delete existing URL by Id.

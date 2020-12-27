@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using URLShortner.Data.Interfaces;
+using URLShortner.Data.Models;
+using URLShortner.Service.Helpers;
 using URLShortner.Service.Interfaces;
 using URLShortner.Service.Models;
 
 namespace URLShortner.Service.Services
 {
     /// <summary>
-    /// Definition Service type.
+    /// Definition UrlService type.
     /// </summary>
-    public class Service : IService
+    public class UrlService : IUrlService
     {
         private readonly IRepository _repository;
 
@@ -18,7 +20,7 @@ namespace URLShortner.Service.Services
         /// Constructor.
         /// </summary>
         /// <param name="repository">IRepository type.</param>
-        public Service(IRepository repository)
+        public UrlService(IRepository repository)
         {
             _repository = repository;
         }
@@ -26,11 +28,25 @@ namespace URLShortner.Service.Services
         /// <summary>
         /// Create new Url item.
         /// </summary>
-        /// <param name="url">UrlDto model.</param>
+        /// <param name="newUrl">New Url.</param>
         /// <returns>True or False.</returns>
-        public Task<bool> Create(UrlDto url)
+        public async Task<bool> Create(string newUrl)
         {
-            throw new NotImplementedException();
+            // check that url is not null or empty + that resource exist
+            if (string.IsNullOrEmpty(newUrl) || !newUrl.CheckUrlExists())
+            {
+                return false;
+            }
+
+            var url = new Url
+            {
+                LongUrl = newUrl,
+                ShortUrl = UrlHelper.GenerateShortUrl(),
+                Hits = 0,
+                GeneratedDate = DateTime.Now,
+            };
+
+            return await _repository.Create(url);
         }
 
         /// <summary>
