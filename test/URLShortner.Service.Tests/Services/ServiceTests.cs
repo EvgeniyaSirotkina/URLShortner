@@ -67,5 +67,32 @@ namespace URLShortner.Service.Tests.Services
             // Assert
             result.Should().BeFalse();
         }
+
+        [Fact]
+        public async Task Delete_WhenDataExist_ShouldReturnTrue()
+        {
+            // Arrange
+            var urlId = 5;
+            _mockRepository.Setup(x => x.Delete(urlId)).ReturnsAsync(true);
+
+            // Act
+            var result = await _service.Delete(urlId);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Delete_WhenIdIsNegativeNumber_ShouldReturnFalse()
+        {
+            // Arrange
+            var urlId = -5;
+
+            // Act
+            var result = await _service.Delete(urlId);
+
+            // Assert
+            result.Should().BeFalse();
+        }
     }
 }

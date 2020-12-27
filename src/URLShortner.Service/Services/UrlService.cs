@@ -54,10 +54,8 @@ namespace URLShortner.Service.Services
         /// </summary>
         /// <param name="id">Url Id.</param>
         /// <returns>True or False.</returns>
-        public Task<bool> Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<bool> Delete(int id)
+                => await _repository.Delete(id);
 
         /// <summary>
         /// Get all Urls.
