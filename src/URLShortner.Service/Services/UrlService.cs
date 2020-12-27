@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using URLShortner.Data.Interfaces;
 using URLShortner.Data.Models;
 using URLShortner.Service.Helpers;
@@ -15,14 +17,16 @@ namespace URLShortner.Service.Services
     public class UrlService : IUrlService
     {
         private readonly IRepository _repository;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="repository">IRepository type.</param>
-        public UrlService(IRepository repository)
+        public UrlService(IRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -63,7 +67,9 @@ namespace URLShortner.Service.Services
         /// <returns>List of UrlDto models.</returns>
         public IEnumerable<UrlDto> GetAll()
         {
-            throw new NotImplementedException();
+            var urls = _repository.GetAll();
+
+            return _mapper.Map<IQueryable<Url>, IEnumerable<UrlDto>>(urls);
         }
 
         /// <summary>
@@ -71,9 +77,15 @@ namespace URLShortner.Service.Services
         /// </summary>
         /// <param name="id">Url Id.</param>
         /// <returns>UrlDto model.</returns>
-        public Task<UrlDto> GetById(int id)
+        public async Task<UrlDto> GetById(int id)
         {
-            throw new NotImplementedException();
+            var url = await _repository.GetById(id);
+            if (url != null)
+            {
+                return _mapper.Map<Url, UrlDto>(url);
+            }
+
+            return null;
         }
 
         /// <summary>

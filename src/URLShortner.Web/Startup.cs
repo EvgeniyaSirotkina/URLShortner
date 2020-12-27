@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,8 @@ namespace URLShortner
             // services.AddRepository(Configuration.GetConnectionString("MariaDbConnection"));
 
             services.AddRepository(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllersWithViews();
         }
 
