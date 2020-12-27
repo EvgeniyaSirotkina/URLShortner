@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
+using AutoMapper;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -11,7 +11,6 @@ using URLShortner.Service.Models;
 using URLShortner.Service.Interfaces;
 using URLShortner.Service.Services;
 using URLShortner.Data.Models;
-using AutoMapper;
 
 namespace URLShortner.Service.Tests.Services
 {
@@ -215,6 +214,52 @@ namespace URLShortner.Service.Tests.Services
 
             // Assert
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task Update_WhenDataIsValid_ShoulUpdateurlObjectAndReturnTrue()
+        {
+            // Arrange
+            var url = _fixture.Create<Url>();
+            var urlDto = _fixture.Build<UrlDto>()
+                    .With(x => x.UrlId, url.UrlId)
+                    .With(x => x.LongUrl, url.LongUrl)
+                    .With(x => x.ShortUrl, url.ShortUrl)
+                    .With(x => x.Hits, url.Hits)
+                    .With(x => x.GeneratedDate, url.GeneratedDate)
+                    .Create();
+
+            _mockMapper.Setup(x => x.Map<UrlDto, Url>(urlDto)).Returns(url);
+            _mockRepository.Setup(x => x.Update(url)).ReturnsAsync(true);
+
+            // Act
+            var result = await _service.Update(urlDto);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Update_WhenDataIsvalid_ShouldReturnFalse()
+        {
+            // Arrange
+            var url = _fixture.Create<Url>();
+            var urlDto = _fixture.Build<UrlDto>()
+                    .With(x => x.UrlId, url.UrlId)
+                    .With(x => x.LongUrl, url.LongUrl)
+                    .With(x => x.ShortUrl, url.ShortUrl)
+                    .With(x => x.Hits, url.Hits)
+                    .With(x => x.GeneratedDate, url.GeneratedDate)
+                    .Create();
+
+            _mockMapper.Setup(x => x.Map<UrlDto, Url>(urlDto)).Returns(url);
+            _mockRepository.Setup(x => x.Update(url)).ReturnsAsync(false);
+
+            // Act
+            var result = await _service.Update(urlDto);
+
+            // Assert
+            result.Should().BeFalse();
         }
     }
 }

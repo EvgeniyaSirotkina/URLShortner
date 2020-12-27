@@ -93,9 +93,11 @@ namespace URLShortner.Service.Services
         /// </summary>
         /// <param name="url">Updated Url.</param>
         /// <returns>True or False.</returns>
-        public Task<bool> Update(UrlDto url)
+        public async Task<bool> Update(UrlDto url)
         {
-            throw new NotImplementedException();
+            var updatedUrl = _mapper.Map<UrlDto, Url>(url);
+
+            return await _repository.Update(updatedUrl);
         }
     }
 }
